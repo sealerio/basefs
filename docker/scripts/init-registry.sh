@@ -88,4 +88,5 @@ else
     docker run $regArgs registry:2.7.1 || startRegistry
 fi
 
+sleep 1
 check_registry

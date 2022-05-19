@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+nerdctl stop sealer-registry && nerdctl rmi -f sealer-registry
 systemctl stop containerd
 
 rm -f /usr/bin/conntrack

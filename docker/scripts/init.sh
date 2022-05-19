@@ -21,6 +21,10 @@ STORAGE=${1:-/var/lib/docker}
 REGISTRY_DOMAIN=${2-sea.hub}
 REGISTRY_PORT=${3-5000}
 
+chmod -R 755 ../bin/*
+chmod 644 ../bin
+cp ../bin/* /usr/bin
+
 # Install docker
 chmod a+x docker.sh
 #./docker.sh  /var/docker/lib  sealer.hub 5001
