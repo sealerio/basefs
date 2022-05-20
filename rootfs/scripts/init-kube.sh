@@ -82,10 +82,6 @@ disable_firewalld
 swapoff -a || true
 disable_selinux
 
-chmod -R 755 ../bin/*
-chmod 644 ../bin
-cp ../bin/* /usr/bin
-cp ../scripts/kubelet-pre-start.sh /usr/bin
 # Cgroup driver
 mkdir -p /etc/systemd/system
 cp ../etc/kubelet.service /etc/systemd/system/

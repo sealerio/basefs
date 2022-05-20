@@ -20,6 +20,10 @@ set -x
 REGISTRY_DOMAIN=${2-sea.hub}
 REGISTRY_PORT=${3-5000}
 
+chmod -R 755 ../bin/*
+chmod 644 ../bin
+cp ../bin/* /usr/bin
+
 # Install containerd
 chmod a+x containerd.sh
 sh containerd.sh "$REGISTRY_DOMAIN" "$REGISTRY_PORT"

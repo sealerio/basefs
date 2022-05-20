@@ -58,7 +58,7 @@ check_registry() {
 
 
 ## rm container if exist.
-nerdctl rm -f $container || true
+! nerdctl ps -a |grep sealer-registry || nerdctl rmi -f sealer-registry
 ##
 rm -rf /var/lib/nerdctl/1935db59/names/default/$container
 
@@ -86,4 +86,5 @@ else
     nerdctl run $regArgs registry:2.7.1 || startRegistry
 fi
 
+sleep 1
 check_registry
