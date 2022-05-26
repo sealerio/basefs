@@ -1,0 +1,6 @@
+FROM kubernetes:v1.19.8
+COPY tigera-operator.yaml etc/
+COPY custom-resources.yaml etc/
+COPY imageList manifests
+CMD kubectl apply -f etc/tigera-operator.yaml
+CMD kubectl apply -f etc/custom-resources.yaml
