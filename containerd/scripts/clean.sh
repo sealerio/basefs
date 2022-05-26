@@ -15,6 +15,8 @@
 
 nerdctl stop sealer-registry && nerdctl rmi -f sealer-registry
 systemctl stop containerd
+systemctl disable containerd
+systemctl daemon-reload
 
 rm -f /usr/bin/conntrack
 rm -f /usr/bin/kubelet-pre-start.sh
@@ -35,10 +37,15 @@ rm -f /usr/bin/vpnkit
 rm -f /usr/bin/containerd-rootless-setuptool.sh
 rm -f /usr/bin/containerd-rootless.sh
 rm -f /usr/bin/nerdctl
+rm -f /usr/bin/seautil
 
 rm -f /etc/sysctl.d/k8s.conf
+rm -f /etc/crictl.yaml
 rm -f /etc/systemd/system/kubelet.service
 rm -rf /etc/systemd/system/kubelet.service.d
+rm -rf /etc/ld.so.conf.d/containerd.conf
 rm -rf /var/lib/kubelet/
+rm -rf /var/lib/containerd
+rm -rf /var/lib/nerdctl
 rm -f /var/lib/kubelet/config.yaml
-rm -f /etc/crictl.yaml
+rm -rf /opt/containerd
