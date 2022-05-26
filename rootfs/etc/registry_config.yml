@@ -11,8 +11,6 @@ http:
   addr: :5000
   headers:
     X-Content-Type-Options: [nosniff]
-proxy:
-  on: true
 health:
   storagedriver:
     enabled: true
