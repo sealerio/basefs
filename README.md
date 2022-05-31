@@ -30,6 +30,14 @@ this will build a CloudImage with amd64 platform.
 auto-build v1.22.8 --platform amd64
 ```
 
+### build with specify CRI
+
+this will build a CloudImage with containerd. if user not specify the CRI ,we use docker as CloudImage default cri.
+
+```shell
+auto-build v1.22.8 --cri containerd
+```
+
 ### build without CNI plugin
 
 this will only build alpine image without CNI plugin,default option is using calico as its CNI plugin.
@@ -40,10 +48,10 @@ auto-build v1.22.8 --alpine
 
 ### build with customized CloudImage name
 
-this will build a CloudImage named `registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes/myk8s:v1.22.8`
+this will build a CloudImage named `registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8`
 
 ```shell
-auto-build v1.22.8 --name registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes/myk8s:v1.22.8
+auto-build v1.22.8 --name registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8
 ```
 
 ### build without pushing

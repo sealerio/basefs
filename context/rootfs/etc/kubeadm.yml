@@ -1,10 +1,10 @@
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: { { .kubeadmApiVersion } }
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: 172.16.0.181
   bindPort: 6443
 nodeRegistration:
-  criSocket: /var/run/dockershim.sock
+  criSocket: { { .criSocket } }
   taints: null
 
 ---
@@ -38,7 +38,7 @@ apiServer:
     name: localtime
     pathType: File
     readOnly: true
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: { { .kubeadmApiVersion } }
 controlPlaneEndpoint: apiserver.cluster.local:6443
 controllerManager:
   extraArgs:
@@ -58,9 +58,9 @@ etcd:
     dataDir: ""
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
-imageRepository: k8s.gcr.io
+imageRepository: { { .imageRepository } }
 kind: ClusterConfiguration
-kubernetesVersion: v1.19.8
+kubernetesVersion: {{.kubernetesVersion}}
 networking:
   podSubnet: 100.64.0.0/10
   serviceSubnet: 10.96.0.0/22
