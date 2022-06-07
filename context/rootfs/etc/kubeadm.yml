@@ -1,7 +1,6 @@
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: 172.16.0.181
   bindPort: 6443
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
@@ -9,11 +8,6 @@ nodeRegistration:
 
 ---
 apiServer:
-  certSANs:
-    - 127.0.0.1
-    - apiserver.cluster.local
-    - 10.103.97.2
-    - 172.16.0.181
   extraArgs:
     audit-log-format: json
     audit-log-maxage: "7"
@@ -22,7 +16,6 @@ apiServer:
     audit-log-path: /var/log/kubernetes/audit.log
     audit-policy-file: /etc/kubernetes/audit-policy.yml
     enable-aggregator-routing: "true"
-    etcd-servers: https://172.16.0.181:2379
     feature-gates: TTLAfterFinished=true,EphemeralContainers=true
   extraVolumes:
     - hostPath: /etc/kubernetes
@@ -39,7 +32,6 @@ apiServer:
       pathType: File
       readOnly: true
 apiVersion: kubeadm.k8s.io/v1beta2
-controlPlaneEndpoint: apiserver.cluster.local:6443
 controllerManager:
   extraArgs:
     experimental-cluster-signing-duration: 876000h
@@ -73,7 +65,17 @@ scheduler:
       name: localtime
       pathType: File
       readOnly: true
-
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+caCertPath: /etc/kubernetes/pki/ca.crt
+discovery:
+  timeout: 5m0s
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+controlPlane:
+  localAPIEndpoint:
+    bindPort: 6443
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 authentication:
