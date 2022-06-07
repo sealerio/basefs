@@ -212,28 +212,28 @@ completely build context dendrogram at build stage which merged base rootfs, oss
 │   │   └── registry.tar
 │   └── Metadata
 └── rootfs
-├── etc
-│   ├── 10-kubeadm.conf
-│   ├── Clusterfile
-│   ├── daemon.json
-│   ├── docker.service
-│   ├── kubeadm.yml.tmpl
-│   ├── kubelet.service
-│   ├── registry_config.yml
-│   └── registry.yml
-├── imageList
-├── Kubefile
-├── registry
-├── scripts
-│   ├── clean-kube.sh
-│   ├── clean.sh
-│   ├── docker.sh
-│   ├── init-kube.sh
-│   ├── init-registry.sh
-│   ├── init.sh
-│   └── kubelet-pre-start.sh
-└── statics
-└── audit-policy.yml
+    ├── etc
+    │   ├── 10-kubeadm.conf
+    │   ├── Clusterfile
+    │   ├── daemon.json
+    │   ├── docker.service
+    │   ├── kubeadm.yml.tmpl
+    │   ├── kubelet.service
+    │   ├── registry_config.yml
+    │   └── registry.yml
+    ├── imageList
+    ├── Kubefile
+    ├── registry
+    ├── scripts
+    │   ├── clean-kube.sh
+    │   ├── clean.sh
+    │   ├── docker.sh
+    │   ├── init-kube.sh
+    │   ├── init-registry.sh
+    │   ├── init.sh
+    │   └── kubelet-pre-start.sh
+    └── statics
+    └── audit-policy.yml
 ```
 
 ## Special case for note
