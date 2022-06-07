@@ -14,9 +14,8 @@ images, so make sure it is a valid value.
 
 ### default build
 
-this is will build two CloudImage named "kubernetes:v1.22.8" with calico as CNI plugin and "kubernetes:v1.22.8--alpine"
-without CNI plugin. and both have two platform: amd64 and arm64 platform. that means you got four CloudImages at the
-same time.
+this is will build the CloudImage named "kubernetes:v1.22.8" without CNI plugin. and both have two platform: amd64 and
+arm64 platform. that means you got four CloudImages at the same time.
 
 ```shell
 auto-build v1.22.8
@@ -30,20 +29,20 @@ this will build a CloudImage with amd64 platform.
 auto-build v1.22.8 --platform amd64
 ```
 
-### build without CNI plugin
+### build with specify CRI
 
-this will only build alpine image without CNI plugin,default option is using calico as its CNI plugin.
+this will build a CloudImage with containerd. if user not specify the CRI ,we use containerd as CloudImage default cri.
 
 ```shell
-auto-build v1.22.8 --alpine
+auto-build v1.22.8 --cri docker
 ```
 
 ### build with customized CloudImage name
 
-this will build a CloudImage named `registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes/myk8s:v1.22.8`
+this will build a CloudImage named `registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8`
 
 ```shell
-auto-build v1.22.8 --name registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes/myk8s:v1.22.8
+auto-build v1.22.8 --name registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8
 ```
 
 ### build without pushing
