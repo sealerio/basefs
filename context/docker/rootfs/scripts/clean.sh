@@ -36,7 +36,7 @@ rm -f /usr/bin/docker-proxy
 rm -f /usr/bin/dockerd
 
 rm -f /usr/bin/kubeadm
-rm -f /usr/bin/kubetcl
+rm -f /usr/bin/kubectl
 rm -f /usr/bin/kubelet
 rm -f /usr/bin/rootlesskit
 rm -f /usr/bin/rootlesskit-docker-proxy

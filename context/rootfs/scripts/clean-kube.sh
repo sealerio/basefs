@@ -17,7 +17,7 @@ rm -f /usr/bin/conntrack
 rm -f /usr/bin/kubelet-pre-start.sh
 rm -f /usr/bin/crictl
 rm -f /usr/bin/kubeadm
-rm -f /usr/bin/kubetcl
+rm -f /usr/bin/kubectl
 rm -f /usr/bin/kubelet
 rm -f /usr/bin/containerd-rootless-setuptool.sh
 rm -f /usr/bin/containerd-rootless.sh
