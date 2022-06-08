@@ -26,7 +26,7 @@ cp ../bin/* /usr/bin
 
 # Install containerd
 chmod a+x containerd.sh
-sh containerd.sh "$REGISTRY_DOMAIN" "$REGISTRY_PORT"
+/bin/bash containerd.sh "$REGISTRY_DOMAIN" "$REGISTRY_PORT"
 
 # Modify kubelet conf
 mkdir -p /etc/systemd/system/kubelet.service.d
@@ -43,4 +43,4 @@ Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --cgroup-driver=${dri
 eof
 
 chmod a+x init-kube.sh
-sh init-kube.sh
+/bin/bash init-kube.sh
