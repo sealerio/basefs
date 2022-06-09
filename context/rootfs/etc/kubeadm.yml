@@ -91,7 +91,7 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: cgroupfs
+cgroupDriver: systemd
 cgroupsPerQOS: true
 clusterDomain: cluster.local
 configMapAndSecretChangeDetectionStrategy: Watch
