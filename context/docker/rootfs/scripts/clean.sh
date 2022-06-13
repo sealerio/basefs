@@ -14,6 +14,11 @@
 # limitations under the License.
 
 systemctl stop docker
+docker0=$(ip addr show docker0 | head -1|tr " " "\n"|grep "<"|grep -iwo "UP"|wc -l)
+if [ "$docker0" == "1" ]; then
+   ip link delete docker0 type bridge
+   ip addr del dev docker0 172.17.0.1/16
+fi
 rm -rf /lib/systemd/system/docker.service
 rm -rf /usr/lib/systemd/system/docker.service
 rm -rf /etc/docker/daemon.json
