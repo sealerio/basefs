@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=SC1091
+
 # Copyright © 2021 Alibaba Group Holding Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,7 +47,7 @@ load_images() {
 }
 
 storage=${1:-/var/lib/docker}
-mkdir -p $storage
+mkdir -p "$storage"
 if ! command_exists docker; then
   lsb_dist=$(get_distribution)
   lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"

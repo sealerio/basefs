@@ -16,10 +16,7 @@
 set -x
 set -e
 
-if [ $(
-  systemctl status containerd >/dev/null 2>&1
-  echo $?
-) != 0 ]; then
+if [ "$(systemctl status containerd >/dev/null 2>&1; echo $?)" != 0 ]; then
   tar -xvzf ../cri/containerd.tar.gz -C /
   cp -rf ../lib64/lib* /usr/lib64/
   systemctl enable containerd.service

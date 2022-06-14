@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=SC1091
+
 # Open ipvs
 modprobe -- ip_vs
 modprobe -- ip_vs_rr

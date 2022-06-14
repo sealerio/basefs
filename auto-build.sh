@@ -54,7 +54,7 @@ for i in "$@"; do
       set -x
       shift
       ;;
-    -*|--*)
+    -*)
       echo "Unknown option $i"
       exit 1
       ;;
@@ -65,7 +65,7 @@ done
 
 version_compare() { printf '%s\n%s\n' "$2" "$1" | sort -V -C; } ## version_vompare $a $b:  a>=b
 
-ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo "unsupported architecture" $(uname -m) && exit 1 ;; esac)
+ARCH=$(case "$(uname -m)" in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo "unsupported architecture" "$(uname -m)" && exit 1 ;; esac)
 
 
 if [ "$version" = "" ]; then echo "pls use -v or --version to set cloudimage kubernetes version" && exit 1; else echo "$version" |grep "v" || version="v${version}";  fi
@@ -104,9 +104,9 @@ sudo wget "https://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.8.5-linu
 sudo sed -i "s/v1.19.8/$version/g" rootfs/etc/kubeadm.yml ##change version
 if [[ "$cri" = "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml; fi
 sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml
-sudo ./${ARCH}/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml"
-sudo ./${ARCH}/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null |sed "/WARNING/d" >> imageList
-if [ "$(sudo ./${ARCH}/bin/kubeadm config images list --config rootfs/etc/kubeadm.yml 2>/dev/null |grep -c "coredns/coredns")" -gt 0 ]; then sudo sed -i "s/#imageRepository/imageRepository/g" rootfs/etc/kubeadm.yml; fi
+sudo ./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml"
+sudo ./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null |sed "/WARNING/d" >> imageList
+if [ "$(sudo ./"${ARCH}"/bin/kubeadm config images list --config rootfs/etc/kubeadm.yml 2>/dev/null |grep -c "coredns/coredns")" -gt 0 ]; then sudo sed -i "s/#imageRepository/imageRepository/g" rootfs/etc/kubeadm.yml; fi
 sudo sed -i "s/k8s.gcr.io/sea.hub:5000/g" rootfs/etc/kubeadm.yml
 pauseImage=$(./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null |sed "/WARNING/d" |grep pause)
 if [ -f "rootfs/etc/dump-config.toml" ]; then sudo sed -i "s/sea.hub:5000\/pause:3.6/$(echo "$pauseImage" |sed 's/\//\\\//g')/g" rootfs/etc/dump-config.toml; fi
