@@ -65,8 +65,8 @@ if ! command_exists docker; then
       if [ "$docker0" != "1" ]; then
           ip link add name docker0 type bridge
           ip addr add dev docker0 172.17.0.1/16
-          cp ../etc/docker.service /usr/lib/systemd/system/docker.service
       fi
+      cp ../etc/docker.service /usr/lib/systemd/system/docker.service
     ;;
     *)
 			echo "unknown system to use /lib/systemd/system/docker.service"
