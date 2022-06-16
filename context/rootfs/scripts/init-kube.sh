@@ -76,4 +76,4 @@ cp ../etc/kubelet.service /etc/systemd/system/
 [ -d /etc/systemd/system/kubelet.service.d ] || mkdir /etc/systemd/system/kubelet.service.d
 cp ../etc/10-kubeadm.conf /etc/systemd/system/kubelet.service.d/
 
-systemctl enable kubelet
+systemctl daemon-reload && systemctl enable kubelet
