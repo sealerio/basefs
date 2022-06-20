@@ -16,10 +16,13 @@
 set -x
 set -e
 
-if [ $(systemctl status containerd > /dev/null 2>&1; echo $?) != 0 ]; then
-  tar  -xvzf ../cri/containerd.tar.gz -C /
+if [ $(
+  systemctl status containerd >/dev/null 2>&1
+  echo $?
+) != 0 ]; then
+  tar -xvzf ../cri/containerd.tar.gz -C /
   cp -rf ../lib64/lib* /usr/lib64/
-  systemctl enable  containerd.service
+  systemctl enable containerd.service
   systemctl restart containerd.service
 fi
 
@@ -27,13 +30,11 @@ rootfs=$(dirname "$(pwd)")
 image_dir="$rootfs/images"
 dump_config_dir="$rootfs/etc/dump-config.toml"
 load_images() {
-for image in "$image_dir"/*
-do
- if [ -f "${image}" ]
- then
-  nerdctl load -i "${image}"
- fi
-done
+  for image in "$image_dir"/*; do
+    if [ -f "${image}" ]; then
+      nerdctl load -i "${image}"
+    fi
+  done
 }
 
 mkdir -p /etc/containerd
@@ -43,7 +44,7 @@ sed -i "s/5000/${2:-5000}/g" "$dump_config_dir"
 
 #add cri sandbox image and sea.hub registry cert path
 ##sandbox_image = "sea.hub:5000/pause:3.6" custom setup
-containerd --config "$dump_config_dir" config dump > /etc/containerd/config.toml
+containerd --config "$dump_config_dir" config dump >/etc/containerd/config.toml
 
 systemctl restart containerd.service
 load_images

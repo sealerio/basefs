@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 rm -f /usr/bin/conntrack
 rm -f /usr/bin/kubelet-pre-start.sh
 rm -f /usr/bin/crictl
