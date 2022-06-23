@@ -20,44 +20,38 @@ gperf_tarball="gperf-${gperf_version}.tar.gz"
 
 # We need to build the libseccomp library from sources to create a static library for the musl libc.
 # However, ppc64le and s390x have no musl targets in Rust. Hence, we do not set cflags for the musl libc.
-if ([ "${arch}" != "ppc64le" ] && [ "${arch}" != "s390x" ]); then
-    # Set FORTIFY_SOURCE=1 because the musl-libc does not have some functions about FORTIFY_SOURCE=2
-    cflags="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -O2"
+if [ "${arch}" != "ppc64le" ]; [ "${arch}" != "s390x" ]; then
+  # Set FORTIFY_SOURCE=1 because the musl-libc does not have some functions about FORTIFY_SOURCE=2
+  cflags="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=1 -O2"
 fi
 
 die() {
-    msg="$*"
-    echo "[Error] ${msg}" >&2
-    exit 1
+  msg="$*"
+  echo "[Error] ${msg}" >&2
+  exit 1
 }
-
-finish() {
-    rm -rf "${workdir}"
-}
-
-#trap finish EXIT
 
 build_and_install_gperf() {
-    echo "Build and install gperf version ${gperf_version}"
-    tar -xf "${gperf_tarball}"
-    pushd "gperf-${gperf_version}"
-    # Unset $CC for configure, we will always use native for gperf
-    CC= ./configure --prefix="/usr/local"
-    make
-    make install
-    popd
-    echo "Gperf installed successfully"
+  echo "Build and install gperf version ${gperf_version}"
+  tar -xf "${gperf_tarball}"
+  pushd "gperf-${gperf_version}"
+  # Unset $CC for configure, we will always use native for gperf
+  CC="" ./configure --prefix="/usr/local"
+  make
+  make install
+  popd
+  echo "Gperf installed successfully"
 }
 
 build_and_install_libseccomp() {
-    echo "Build and install libseccomp version ${libseccomp_version}"
-    tar -xf "${libseccomp_tarball}"
-    pushd "libseccomp-${libseccomp_version}"
-    ./configure --prefix="/usr/local" CFLAGS="${cflags}" --enable-static --host="${arch}"
-    make
-    make install
-    popd
-    echo "Libseccomp installed successfully"
+  echo "Build and install libseccomp version ${libseccomp_version}"
+  tar -xf "${libseccomp_tarball}"
+  pushd "libseccomp-${libseccomp_version}"
+  ./configure --prefix="/usr/local" CFLAGS="${cflags}" --enable-static --host="${arch}"
+  make
+  make install
+  popd
+  echo "Libseccomp installed successfully"
 }
 
 # gperf is required for building the libseccomp.

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+set -x
 
-kube_install_version=${kube_install_version:-"v1.19.8"}
-export kube_install_version=$(echo "$kube_install_version" |grep "v" || kube_install_version="v${kube_install_version}")
+kube_install_version=$(echo "${kube_install_version:-"v1.19.8"}" | grep "v" || kube_install_version="v${kube_install_version}")
+export kube_install_version=${kube_install_version}
 
 export libseccomp_version=${libseccomp_version:-"2.5.1"}
 

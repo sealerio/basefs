@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC1091
 # Copyright © 2021 Alibaba Group Holding Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -96,7 +97,7 @@ if [[ $(ls ../cri/docker*.tar.gz) ]]; then
 else
   if ! command_exists containerd; then
     tar zxvf ../cri/cri-*.tar.gz -C /
-    cd lib_dir && source install_libseccomp.sh
+    cd "$lib_dir" && source install_libseccomp.sh
   fi
   systemctl daemon-reload
   systemctl enable  containerd.service

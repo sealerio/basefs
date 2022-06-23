@@ -50,7 +50,6 @@ this will build a CloudImage with amd64 platform.
 auto-build -v=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8
 ```
 
-
 ### build with specify CRI
 
 this will build a CloudImage with containerd. if user not specify the CRI ,we use containerd as CloudImage default cri.
