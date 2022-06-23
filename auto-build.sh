@@ -79,26 +79,10 @@ echo "cri: ${cri}, kubernetes version: ${version}, build image name: ${buildName
 kubeadmApiVersion=$( (version_compare "$version" "v1.23.0" && echo 'kubeadm.k8s.io\/v1beta3') || (version_compare "$version" "v1.15.0" && echo 'kubeadm.k8s.io\/v1beta2') \
  || (version_compare "$version" "v1.13.0" && echo 'kubeadm.k8s.io\/v1beta1') || (echo "Version must be greater than 1.13: ${version}" && exit 1) )
 
-if [ -d "tmpBuildDir" ]; then
-    echo "Please delete the tmpBuildDir directory"
-    exit 1
-else
-  sudo mkdir -p "tmpBuildDir" && sudo cp -r context tmpBuildDir && cd tmpBuildDir/context
-fi
+workdir="$(mktemp -d auto-build-XXXXX)" && sudo cp -r context "${workdir}" && cd "${workdir}/context" && sudo cp -rf "${cri}"/* .
 
-#download dependent binaries
-sudo wget "https://sealer.oss-cn-beijing.aliyuncs.com/auto-build/${cri}.tar.gz" && sudo tar -zxf "${cri}.tar.gz"
-sudo wget "https://sealer.oss-cn-beijing.aliyuncs.com/auto-build/bin-context.tar.gz" && sudo tar -zxf "bin-context.tar.gz"
-#amd64
-sudo mkdir -p "./${cri}/amd64/bin/" && sudo mkdir -p "./${cri}/arm64/bin/"
-sudo curl -L "https://dl.k8s.io/release/${version}/bin/linux/amd64/kubectl" -o "./${cri}/amd64/bin/kubectl"
-sudo curl -L "https://dl.k8s.io/release/${version}/bin/linux/amd64/kubelet" -o "./${cri}/amd64/bin/kubelet"
-sudo curl -L "https://dl.k8s.io/release/${version}/bin/linux/amd64/kubeadm" -o "./${cri}/amd64/bin/kubeadm"
-#arm64
-sudo curl -L "https://dl.k8s.io/release/${version}/bin/linux/arm64/kubectl" -o "./${cri}/arm64/bin/kubectl"
-sudo curl -L "https://dl.k8s.io/release/${version}/bin/linux/arm64/kubelet" -o "./${cri}/arm64/bin/kubelet"
-sudo curl -L "https://dl.k8s.io/release/${version}/bin/linux/arm64/kubeadm" -o "./${cri}/arm64/bin/kubeadm"
-sudo cp -r "${cri}"/* .
+sudo chmod +x version.sh download.sh && export kube_install_version="$version" && source version.sh && ./download.sh "${cri}"
+
 sudo chmod +x amd64/bin/kube* && sudo chmod +x arm64/bin/kube*
 sudo wget "https://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.8.5-linux-${ARCH}.tar.gz" && sudo tar -xvf "sealer-v0.8.5-linux-${ARCH}.tar.gz"
 sudo sed -i "s/v1.19.8/$version/g" rootfs/etc/kubeadm.yml ##change version
