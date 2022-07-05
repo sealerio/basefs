@@ -35,7 +35,7 @@ if [[ $(ls ../cri/docker*.tar.gz) ]]; then
     imageServer="docker"
 fi
 
-startRegistry() {
+start_registry() {
   n=1
   while ((n <= 3)); do
     echo "attempt to start registry"
@@ -100,9 +100,9 @@ if [ -f "$htpasswd" ]; then
             -v "$htpasswd":/htpasswd \
             -e REGISTRY_AUTH=htpasswd \
             -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
-            -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || startRegistry
+            -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || start_registry
 else
-    $imageServer run "$regArgs" registry:2.7.1 || startRegistry
+    $imageServer run "$regArgs" registry:2.7.1 || start_registry
 fi
 
 sleep 1

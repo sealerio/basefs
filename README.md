@@ -36,13 +36,13 @@ auto-build -v=v1.22.8
 
 ### build with specify platform
 
-this will build a CloudImage with amd64 platform, default is linux/amd64,linux/arm64.
+This will build a CloudImage with amd64 platform, default is linux/amd64,linux/arm64.
 
 ```shell
 auto-build -v=v1.22.8 --platform=amd64
 ```
 
-### build with specify name
+### build with specified name
 
 this will build a CloudImage with amd64 platform.
 
@@ -68,7 +68,7 @@ auto-build -v=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/myk
 
 ### build without pushing
 
-if `--push`, push the clusterimage to the image warehouse. The image name must contain the full name of the repository.
+if `--push`, push the clusterimage to the image registry. The image name must contain the full name of the repository.
 
 ```shell
 auto-build -v=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8 --push
