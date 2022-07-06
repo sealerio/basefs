@@ -16,7 +16,7 @@
 set -e
 set -x
 
-#STORAGE=${1:-/var/lib/docker} compatible docker
+#STORAGE=${1:-/var/lib/docker} will delete
 REGISTRY_DOMAIN=${2-sea.hub}
 REGISTRY_PORT=${3-5000}
 
@@ -24,23 +24,11 @@ chmod -R 755 ../bin/*
 chmod 644 ../bin
 cp ../bin/* /usr/bin
 
-# Install containerd
-chmod a+x containerd.sh
-/bin/bash containerd.sh "$REGISTRY_DOMAIN" "$REGISTRY_PORT"
+chmod a+x install-cri.sh
 
-# Modify kubelet conf
-mkdir -p /etc/systemd/system/kubelet.service.d
-
-if grep "SystemdCgroup = true" /etc/containerd/config.toml &>/dev/null; then
-  driver=systemd
-else
-  driver=cgroupfs
-fi
-
-cat >/etc/systemd/system/kubelet.service.d/containerd.conf <<eof
-[Service]
-Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --cgroup-driver=${driver} --runtime-request-timeout=15m --container-runtime-endpoint=unix:///run/containerd/containerd.sock --image-service-endpoint=unix:///run/containerd/containerd.sock"
-eof
+./install-cri.sh "$STORAGE" "$REGISTRY_DOMAIN" "$REGISTRY_PORT"
 
 chmod a+x init-kube.sh
-/bin/bash init-kube.sh
+
+bash init-kube.sh
+

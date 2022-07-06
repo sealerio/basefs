@@ -1,8 +1,8 @@
 # Design
 
-## CloudImage rootfs
+## Clusterimage rootfs
 
-All the files which run a kubernetes cluster needs of CloudImage.
+All the files which run a kubernetes cluster needs of Clusterimage.
 
 Contains:
 
