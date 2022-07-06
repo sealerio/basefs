@@ -39,13 +39,13 @@ for i in "$@"; do
   -h | --help)
     echo "
 ### Options
-  --k8s-version         set the kubernetes k8s_version of the cluster image, k8s_version must be greater than 1.13
+  --k8s-version         set the kubernetes k8s_version of the Clusterimage, k8s_version must be greater than 1.13
   -c, --cri             cri can be set to docker or containerd between kubernetes 1.20-1.24 versions
   -n, --buildName       set build image name, default is 'registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:${k8s_version}'
   --platform            set the build mirror platform, the default is linux/amd64,linux/arm64
   --push                push clusterimage after building the clusterimage. The image name must contain the full name of the repository, and use -u and -p to specify the username and password.
-  -u, --username        specify the user's username for pushing the cluster image
-  -p, --password        specify the user's password for pushing the cluster image
+  -u, --username        specify the user's username for pushing the Clusterimage
+  -p, --password        specify the user's password for pushing the Clusterimage
   -d, --debug           show all script logs
   -h, --help            help for auto build shell scripts"
     exit 0
