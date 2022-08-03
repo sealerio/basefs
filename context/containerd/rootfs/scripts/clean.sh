@@ -27,6 +27,7 @@ rm -f /usr/bin/containerd-shim-runc-v2
 rm -f /usr/bin/crictl
 rm -f /usr/bin/ctr
 
+systemctl disable kubelet
 rm -f /usr/bin/kubeadm
 rm -f /usr/bin/kubectl
 rm -f /usr/bin/kubelet
@@ -49,3 +50,4 @@ rm -rf /var/lib/containerd
 rm -rf /var/lib/nerdctl
 rm -f /var/lib/kubelet/config.yaml
 rm -rf /opt/containerd
+systemctl daemon-reload

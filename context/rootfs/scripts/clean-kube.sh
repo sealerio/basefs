@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+systemctl disable kubelet
 rm -f /usr/bin/conntrack
 rm -f /usr/bin/kubelet-pre-start.sh
 rm -f /usr/bin/crictl
@@ -29,3 +30,4 @@ rm -f /etc/systemd/system/kubelet.service
 rm -rf /etc/systemd/system/kubelet.service.d
 rm -rf /var/lib/kubelet/
 rm -f /var/lib/kubelet/config.yaml
+systemctl daemon-reload
