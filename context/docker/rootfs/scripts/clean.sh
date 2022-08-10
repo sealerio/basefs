@@ -14,6 +14,7 @@
 # limitations under the License.
 
 systemctl stop docker
+systemctl disable docker
 docker0=$(ip addr show docker0 | head -1 | tr " " "\n" | grep "<" | grep -iwo "UP" | wc -l)
 if [ "$docker0" == "1" ]; then
   ip link delete docker0 type bridge
@@ -35,6 +36,7 @@ rm -f /usr/bin/docker-init
 rm -f /usr/bin/docker-proxy
 rm -f /usr/bin/dockerd
 
+systemctl disable kubelet
 rm -f /usr/bin/kubeadm
 rm -f /usr/bin/kubectl
 rm -f /usr/bin/kubelet
@@ -51,3 +53,4 @@ rm -f /etc/systemd/system/kubelet.service
 rm -rf /etc/systemd/system/kubelet.service.d
 rm -rf /var/lib/kubelet/
 rm -f /var/lib/kubelet/config.yaml
+systemctl daemon-reload
