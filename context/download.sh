@@ -19,8 +19,7 @@ checkEnvExist libseccomp_version gperf_version nerdctl_version crictl_version se
 
 cri=${1:-}
 if
-  [ -z "${cri}" ] || [ "${cri}" != "docker" ]
-  [ "${cri}" != "containerd" ]
+  [ -z "${cri}" ] || [ "${cri}" != "docker" ] && [ "${cri}" != "containerd" ]
 then
   die "Usage '${0} docker' or '${0} containerd'"
 fi
