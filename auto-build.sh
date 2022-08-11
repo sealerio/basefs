@@ -96,7 +96,7 @@ if [ "$(sudo ./"${ARCH}"/bin/kubeadm config images list --config rootfs/etc/kube
 sudo sed -i "s/k8s.gcr.io/sea.hub:5000/g" rootfs/etc/kubeadm.yml
 pauseImage=$(./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null | sed "/WARNING/d" | grep pause)
 if [ -f "rootfs/etc/dump-config.toml" ]; then sudo sed -i "s/sea.hub:5000\/pause:3.6/$(echo "$pauseImage" | sed 's/\//\\\//g')/g" rootfs/etc/dump-config.toml; fi
-
+sudo sed -i "s/v1.19.8/${k8s_version}" {arm64,amd64}/etc/Metadata
 ##linux/arm64,linux/amd64
 sudo ./sealer build -t "${buildName}" -f Kubefile --platform "${platform}" .
 if [[ "$push" == "true" ]]; then
