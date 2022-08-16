@@ -79,7 +79,7 @@ nerdctl_check_registry() {
 }
 
 ## rm container if exist.
-! $imageServer ps -a |grep sealer-registry || $imageServer rmi -f sealer-registry
+! $imageServer ps -a |grep sealer-registry || $imageServer rm -f sealer-registry
 
 regArgs="-d --restart=always \
 --net=host \
@@ -102,7 +102,7 @@ if [ -f "$htpasswd" ]; then
             -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
             -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || start_registry
 else
-    $imageServer run "$regArgs" registry:2.7.1 || start_registry
+    bash -c "${imageServer} run ${regArgs} registry:2.7.1" || start_registry
 fi
 
 sleep 1

@@ -78,7 +78,7 @@ if [[ $(ls ../cri/docker*.tar.gz) ]]; then
     [ -d  /etc/docker/ ] || mkdir /etc/docker/  -p
 
     chmod -R 755 ../cri
-    tar -zxvf ../cri/docker.tar.gz -C /usr/bin
+    tar -zxvf ../cri/docker*.tar.gz -C /usr/bin
     chmod a+x /usr/bin
     chmod a+x /usr/bin/docker
     chmod a+x /usr/bin/dockerd
@@ -91,7 +91,7 @@ if [[ $(ls ../cri/docker*.tar.gz) ]]; then
   fi
   disable_selinux
   systemctl daemon-reload
-  systemctl enbale  docker.service
+  systemctl enable  docker.service
   systemctl restart docker.service
   load_image_server="docker"
 else
