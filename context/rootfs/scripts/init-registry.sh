@@ -18,6 +18,7 @@ set -x
 # prepare registry storage as directory
 cd "$(dirname "$0")"
 
+REGISTRY_PORT=${1-5000}
 VOLUME=${2-/var/lib/registry}
 REGISTRY_DOMAIN=${3-sea.hub}
 
@@ -29,34 +30,56 @@ certs_dir="$rootfs/certs"
 
 mkdir -p "$VOLUME" || true
 
-startRegistry() {
+imageServer="nerdctl"
+if [[ $(ls ../cri/docker*.tar.gz) ]]; then
+    imageServer="docker"
+fi
+
+start_registry() {
   n=1
   while ((n <= 3)); do
     echo "attempt to start registry"
-    nerdctl start $container && break
-    ((n++))
+    $imageServer start $container; break || ((n++))
     sleep 3
   done
 }
 
-check_registry() {
+docker_check_registry() {
   n=1
-  while ((n <= 3)); do
-    (nerdctl inspect sealer-registry | grep "\"Status\": \"running\"") && break
+  while (( n <= 3 ))
+  do
+      registry_status=$(docker inspect --format '{{json .State.Status}}' sealer-registry)
+      if [[ "$registry_status" == \"running\" ]]; then
+          break
+      fi
+      if [[ $n -eq 3 ]]; then
+         echo "sealer-registry is not running, status: $registry_status"
+         exit 1
+      fi
+      (( n++ ))
+      sleep 3
+  done
+}
+
+nerdctl_check_registry() {
+  n=1
+  while (( n <= 3 ))
+  do
+    if nerdctl inspect sealer-registry | grep -q '"Status": "running"'; then
+        break
+    fi
     if [[ $n -eq 3 ]]; then
       ## TODO: Add registry_status of sealer-registry container
-      echo "sealer-registry is not running"
+      echo "sealer-registry is not running, use 'nerdctl inspect sealer-registry' command to show status"
       exit 1
     fi
-    ((n++))
+    (( n++ ))
     sleep 3
   done
 }
 
 ## rm container if exist.
-! nerdctl ps -a | grep sealer-registry || nerdctl rmi -f sealer-registry
-##
-rm -rf /var/lib/nerdctl/1935db59/names/default/$container
+! $imageServer ps -a |grep sealer-registry || $imageServer rm -f sealer-registry
 
 regArgs="-d --restart=always \
 --net=host \
@@ -67,20 +90,21 @@ regArgs="-d --restart=always \
 -e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key"
 
 if [ -f "$config" ]; then
-  sed -i "s/5000/$1/g" "$config"
-  regArgs="$regArgs \
+    sed -i "s/5000/${REGISTRY_PORT}/g" "$config"
+    regArgs="$regArgs \
     -v $config:/etc/docker/registry/config.yml"
 fi
 
 if [ -f "$htpasswd" ]; then
-  nerdctl run "$regArgs" \
-    -v "$htpasswd":/htpasswd \
-    -e REGISTRY_AUTH=htpasswd \
-    -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
-    -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || startRegistry
+    $imageServer run "$regArgs" \
+            -v "$htpasswd":/htpasswd \
+            -e REGISTRY_AUTH=htpasswd \
+            -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
+            -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || start_registry
 else
-  nerdctl run "$regArgs" registry:2.7.1 || startRegistry
+    bash -c "${imageServer} run ${regArgs} registry:2.7.1" || start_registry
 fi
 
 sleep 1
-check_registry
+
+([ "$imageServer" = "docker" ] && docker_check_registry) || nerdctl_check_registry
