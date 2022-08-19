@@ -83,7 +83,8 @@ kubeadmApiVersion=$( (version_compare "$k8s_version" "v1.23.0" && echo 'kubeadm.
 workdir="$(mktemp -d auto-build-XXXXX)" && sudo cp -r context "${workdir}" && cd "${workdir}/context" && sudo cp -rf "${cri}"/* .
 
 # shellcheck disable=SC1091
-sudo chmod +x version.sh download.sh && export kube_install_version="$k8s_version" && source version.sh; ./download.sh "${cri}"
+sudo chmod +x version.sh download.sh && export kube_install_version="$k8s_version" && source version.sh
+./download.sh "${cri}"
 
 sudo chmod +x amd64/bin/kube* && sudo chmod +x arm64/bin/kube*
 sudo wget "https://sealer.oss-cn-beijing.aliyuncs.com/sealers/sealer-v0.8.5-linux-${ARCH}.tar.gz" && sudo tar -xvf "sealer-v0.8.5-linux-${ARCH}.tar.gz"
