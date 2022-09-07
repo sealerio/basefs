@@ -45,6 +45,7 @@ image_dir="$rootfs/images"
 
 mkdir -p "$VOLUME" || true
 
+# shellcheck disable=SC2068
 runtimeRun() {
   if [ "$CONTAINER_RUNTIME" == "containerd" ]; then
     nerdctl container run $@
@@ -53,6 +54,7 @@ runtimeRun() {
   fi
 }
 
+# shellcheck disable=SC2068
 runtimeStart() {
   if [ "$CONTAINER_RUNTIME" == "containerd" ]; then
     nerdctl start $@
@@ -61,6 +63,7 @@ runtimeStart() {
   fi
 }
 
+# shellcheck disable=SC2068
 runtimeInspect() {
   if [ "$CONTAINER_RUNTIME" == "containerd" ]; then
     nerdctl container inspect $@
@@ -69,6 +72,7 @@ runtimeInspect() {
   fi
 }
 
+# shellcheck disable=SC2068
 runtimeGetContainerStatus() {
   if [ "$CONTAINER_RUNTIME" == "containerd" ]; then
     nerdctl container inspect $@ | grep '"Status"' | awk '{print $2}' | tr -d ','
@@ -131,20 +135,20 @@ regArgs="-d --restart=always \
 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$REGISTRY_DOMAIN.crt \
 -e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key"
 
-if [ -f $config ]; then
-  sed -i "s/5000/$1/g" $config
+if [ -f "$config" ]; then
+  sed -i "s/5000/$1/g" "$config"
   regArgs="$regArgs \
     -v $config:/etc/docker/registry/config.yml"
 fi
 
-if [ -f $htpasswd ]; then
-  runtimeRun $regArgs \
-    -v $htpasswd:/htpasswd \
+if [ -f "$htpasswd" ]; then
+  runtimeRun "$regArgs" \
+    -v "$htpasswd":/htpasswd \
     -e REGISTRY_AUTH=htpasswd \
     -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
     -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || startRegistry
 else
-  runtimeRun $regArgs registry:2.7.1 || startRegistry
+  runtimeRun "$regArgs" registry:2.7.1 || startRegistry
 fi
 
 if ! check_registry; then
