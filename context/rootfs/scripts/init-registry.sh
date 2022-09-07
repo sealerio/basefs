@@ -115,8 +115,8 @@ check_registry() {
     sleep 3
   done
   if [[ "$registry_status" != \"running\" ]]; then
-    echo "sealer-registry is not running, status: $registry_status"
-    return 1
+    echo "sealer-registry is not running, status: $registry_status" >&2
+    exit 1
   fi
 }
 
