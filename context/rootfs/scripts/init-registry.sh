@@ -24,8 +24,9 @@ REGISTRY_PORT=${1-5000}
 VOLUME=${2-/var/lib/registry}
 REGISTRY_DOMAIN=${3-sea.hub}
 
+# shellcheck disable=SC2068
 utils_command_exists() {
-  command -v "$@" >/dev/null 2>&1
+  command -v $@ >/dev/null 2>&1
 }
 
 CONTAINER_RUNTIME=docker
