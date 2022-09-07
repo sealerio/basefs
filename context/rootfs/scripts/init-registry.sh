@@ -16,8 +16,10 @@
 set -e
 set -x
 # prepare registry storage as directory
+# shellcheck disable=SC2046
 cd $(dirname "$0")
 
+# shellcheck disable=SC2034
 REGISTRY_PORT=${1-5000}
 VOLUME=${2-/var/lib/registry}
 REGISTRY_DOMAIN=${3-sea.hub}
