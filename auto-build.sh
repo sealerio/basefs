@@ -102,7 +102,7 @@ sudo sed -i "s/v1.19.8/${k8s_version}/g" {arm64,amd64}/etc/Metadata
 sudo ./sealer build -t "${buildName}" -f Kubefile --platform "${platform}" .
 if [[ "$push" == "true" ]]; then
   if [[ -n "$username" ]] && [[ -n "$password" ]]; then
-    sudo ./sealer login "$(echo "$buildName" | cut -d "/" -f1)" -u '${username}' -p '${password}'
+    sudo ./sealer login "$(echo "$buildName" | cut -d "/" -f1)" -u "${username}" -p "${password}"
   fi
   sudo ./sealer push "${buildName}"
 fi
