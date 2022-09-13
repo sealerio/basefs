@@ -38,7 +38,7 @@ libseccomp_tarball_url="${libseccomp_url}/releases/download/v${libseccomp_versio
 
 nerdctl_url="https://github.com/containerd/nerdctl"
 nerdctl_tarball_amd64="nerdctl-${nerdctl_version:-}-linux-amd64.tar.gz"
-nerdctl_tarball_arm64="nerdctl-${nerdctl_version}-linux-amd64.tar.gz"
+nerdctl_tarball_arm64="nerdctl-${nerdctl_version}-linux-arm64.tar.gz"
 nerdctl_tarball_amd64_url="${nerdctl_url}/releases/download/v${nerdctl_version}/${nerdctl_tarball_amd64}"
 nerdctl_tarball_arm64_url="${nerdctl_url}/releases/download/v${nerdctl_version}/${nerdctl_tarball_arm64}"
 

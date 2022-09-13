@@ -23,59 +23,57 @@ lib_dir="${rootfs}/lib"
 dump_config_dir="$rootfs/etc/dump-config.toml"
 
 command_exists() {
-    command -v "$@" > /dev/null 2>&1
+  command -v "$@" >/dev/null 2>&1
 }
 get_distribution() {
-    lsb_dist=""
-    # Every system that we officially support has /etc/os-release
-    if [ -r /etc/os-release ]; then
-    	lsb_dist="$(. /etc/os-release && echo "$ID")"
-    fi
-    # Returning an empty string here should be alright since the
-    # case statements don't act unless you provide an actual value
-    echo "$lsb_dist"
+  lsb_dist=""
+  # Every system that we officially support has /etc/os-release
+  if [ -r /etc/os-release ]; then
+    lsb_dist="$(. /etc/os-release && echo "$ID")"
+  fi
+  # Returning an empty string here should be alright since the
+  # case statements don't act unless you provide an actual value
+  echo "$lsb_dist"
 }
-disable_selinux(){
-    if [ -s /etc/selinux/config ] && grep 'SELINUX=enforcing' /etc/selinux/config; then
-        sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-        setenforce 0
-    fi
+disable_selinux() {
+  if [ -s /etc/selinux/config ] && grep 'SELINUX=enforcing' /etc/selinux/config; then
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    setenforce 0
+  fi
 }
 server_load_images() {
-for image in "$image_dir"/*
-do
- if [ -f "${image}" ]
- then
-  ${1} load -i "${image}"
- fi
-done
+  for image in "$image_dir"/*; do
+    if [ -f "${image}" ]; then
+      ${1} load -i "${image}"
+    fi
+  done
 }
 
 ##cri is docker
 if [[ $(ls ../cri/docker*.tar.gz) ]]; then
   if ! command_exists docker; then
-    lsb_dist=$( get_distribution )
+    lsb_dist=$(get_distribution)
     lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
     echo "current system is $lsb_dist"
     case "$lsb_dist" in
-      ubuntu|deepin|debian|raspbian)
-        cp ../etc/docker.service /lib/systemd/system/docker.service
+    ubuntu | deepin | debian | raspbian)
+      cp ../etc/docker.service /lib/systemd/system/docker.service
       ;;
-      centos|rhel|ol|sles|kylin|neokylin)
-        cp ../etc/docker.service /usr/lib/systemd/system/docker.service
+    centos | rhel | ol | sles | kylin | neokylin)
+      cp ../etc/docker.service /usr/lib/systemd/system/docker.service
       ;;
-      alios)
-        ip link add name docker0 type bridge
-        ip addr add dev docker0 172.17.0.1/16
-        cp ../etc/docker.service /usr/lib/systemd/system/docker.service
+    alios)
+      ip link add name docker0 type bridge
+      ip addr add dev docker0 172.17.0.1/16
+      cp ../etc/docker.service /usr/lib/systemd/system/docker.service
       ;;
-      *)
-        echo "unknown system to use /lib/systemd/system/docker.service"
-        cp ../etc/docker.service /lib/systemd/system/docker.service
+    *)
+      echo "unknown system to use /lib/systemd/system/docker.service"
+      cp ../etc/docker.service /lib/systemd/system/docker.service
       ;;
     esac
 
-    [ -d  /etc/docker/ ] || mkdir /etc/docker/  -p
+    [ -d /etc/docker/ ] || mkdir /etc/docker/ -p
 
     chmod -R 755 ../cri
     tar -zxvf ../cri/docker*.tar.gz -C /usr/bin
@@ -91,7 +89,7 @@ if [[ $(ls ../cri/docker*.tar.gz) ]]; then
   fi
   disable_selinux
   systemctl daemon-reload
-  systemctl enable  docker.service
+  systemctl enable docker.service
   systemctl restart docker.service
   load_image_server="docker"
 else
@@ -100,7 +98,7 @@ else
     cd "$lib_dir" && source install_libseccomp.sh
   fi
   systemctl daemon-reload
-  systemctl enable  containerd.service
+  systemctl enable containerd.service
   systemctl restart containerd.service
 
   sed -i "s/sea.hub/${2:-sea.hub}/g" "$dump_config_dir"
@@ -109,7 +107,7 @@ else
   #add cri sandbox image and sea.hub registry cert path
   ##sandbox_image = "sea.hub:5000/pause:3.6" custom setup
   mkdir -p /etc/containerd
-  containerd --config "$dump_config_dir" config dump > /etc/containerd/config.toml
+  containerd --config "$dump_config_dir" config dump >/etc/containerd/config.toml
   systemctl restart containerd.service
   load_image_server="nerdctl"
 fi

@@ -31,4 +31,3 @@ chmod a+x install-cri.sh
 chmod a+x init-kube.sh
 
 bash init-kube.sh
-
