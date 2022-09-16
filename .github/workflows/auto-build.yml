@@ -11,13 +11,13 @@ jobs:
     permissions:
       issues: write
     steps:
-
+      - name: Check out code
+        uses: actions/checkout@v2
       - name: Auto build image
         id: autobuild
         run: |
           commentbody="${{github.event.comment.body}}"
           commentbody=$(echo $commentbody | sed "s/\/imagebuild//g")
-          sudo git clone https://github.com/sealerio/basefs.git && cd basefs
           sudo touch autobuild.log && sudo chmod 666 autobuild.log && sudo bash auto-build.sh --username="${{secrets.REGISTRY_USERNAME}}" --password="${{secrets.REGISTRY_PASSWORD}}" $commentbody > autobuild.log && cat autobuild.log
           echo "::set-output name=info::$(grep 'cri:' autobuild.log))"
 
