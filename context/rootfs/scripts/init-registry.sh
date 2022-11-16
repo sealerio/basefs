@@ -69,7 +69,9 @@ regArgs="-d --restart=always \
 -v $certs_dir:/certs \
 -v $VOLUME:/var/lib/registry \
 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$REGISTRY_DOMAIN.crt \
--e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key"
+-e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key \
+-e REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:5001 \
+-e REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED=true"
 
 if [ -f $config ]; then
     sed -i "s/5000/$1/g" $config
