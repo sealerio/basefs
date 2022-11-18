@@ -13,20 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
-set -x
-
-#STORAGE=${1:-/var/lib/docker} will delete
+STORAGE=${1:-/var/lib/docker}
 REGISTRY_DOMAIN=${2-sea.hub}
 REGISTRY_PORT=${3-5000}
 
-chmod -R 755 ../bin/*
-chmod 644 ../bin
-cp ../bin/* /usr/bin
-
-chmod a+x install-cri.sh
-
-./install-cri.sh "$STORAGE" "$REGISTRY_DOMAIN" "$REGISTRY_PORT"
+# Install docker
+chmod a+x docker.sh
+#./docker.sh  /var/docker/lib  sealer.hub 5001
+bash docker.sh ${STORAGE} ${REGISTRY_DOMAIN} $REGISTRY_PORT
 
 chmod a+x init-kube.sh
 
