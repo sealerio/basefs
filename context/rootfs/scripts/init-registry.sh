@@ -1,10 +1,25 @@
 #!/bin/bash
+# Copyright © 2021 Alibaba Group Holding Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 set -e
 set -x
 # prepare registry storage as directory
+# shellcheck disable=SC2046
 cd $(dirname "$0")
 
+# shellcheck disable=SC2034
 REGISTRY_PORT=${1-5000}
 VOLUME=${2-/var/lib/registry}
 REGISTRY_DOMAIN=${3-sea.hub}
@@ -18,6 +33,7 @@ image_dir="$rootfs/images"
 
 mkdir -p "$VOLUME" || true
 
+# shellcheck disable=SC2106
 startRegistry() {
     n=1
     while (( n <= 3 ))
@@ -69,14 +85,17 @@ regArgs="-d --restart=always \
 -v $certs_dir:/certs \
 -v $VOLUME:/var/lib/registry \
 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$REGISTRY_DOMAIN.crt \
--e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key"
+-e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key \
+-e REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:5002 \
+-e REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED=true"
 
+# shellcheck disable=SC2086
 if [ -f $config ]; then
     sed -i "s/5000/$1/g" $config
     regArgs="$regArgs \
     -v $config:/etc/docker/registry/config.yml"
 fi
-
+# shellcheck disable=SC2086
 if [ -f $htpasswd ]; then
     docker run $regArgs \
             -v $htpasswd:/htpasswd \

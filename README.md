@@ -27,8 +27,8 @@ images, so make sure it is a valid value.
 
 ### default build
 
-this is will build the Clusterimage named "kubernetes:v1.22.8" without CNI plugin. and both have two platform: amd64 and
-arm64 platform. that means you got four Clusterimages at the same time.
+this is will build the sealer image named "kubernetes:v1.22.15" without CNI plugin. and both have two platform: amd64 and
+arm64 platform. that means you got four sealer image at the same time.
 
 ```shell
 auto-build --k8s-version=v1.22.8
@@ -36,7 +36,7 @@ auto-build --k8s-version=v1.22.8
 
 ### build with specify platform
 
-This will build a Clusterimage with amd64 platform, default is linux/amd64,linux/arm64.
+This will build a sealer image with amd64 platform, default is linux/amd64,linux/arm64.
 
 ```shell
 auto-build --k8s-version=v1.22.8 --platform=amd64
@@ -44,15 +44,15 @@ auto-build --k8s-version=v1.22.8 --platform=amd64
 
 ### build with specified name
 
-this will build a Clusterimage with amd64 platform.
+this will build a sealer image with amd64 platform.
 
 ```shell
-auto-build --k8s-version=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8
+auto-build --k8s-version=v1.22.8 --buildName=docker.io/sealerio/kubernetes:v1.22.8
 ```
 
 ### build with specify CRI
 
-this will build a Clusterimage with containerd. if user not specify the CRI ,we use containerd as Clusterimage default cri.
+this will build a sealer image with containerd. if user not specify the CRI ,we use docker as sealer image default cri.
 
 ```shell
 auto-build --k8s-version=v1.22.8 --cri=docker
@@ -60,18 +60,18 @@ auto-build --k8s-version=v1.22.8 --cri=docker
 
 ### build with customized Clusterimage name
 
-this will build a Clusterimage named `registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8`
+this will build a sealer image named `docker.io/sealerio/myk8s:v1.22.8`
 
 ```shell
-auto-build --k8s-version=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8
+auto-build --k8s-version=v1.22.8 --buildName=docker.io/sealerio/myk8s:v1.22.8
 ```
 
 ### build without pushing
 
-if `--push`, push the clusterimage to the image registry. The image name must contain the full name of the repository.
+if `--push`, push the sealer image to the image registry. The image name must contain the full name of the repository.
 
 ```shell
-auto-build --k8s-version=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8 --push
+auto-build --k8s-version=v1.22.8 --buildName=docker.io/sealerio/kubernetes:v1.22.8 --push
 ```
 
 The image warehouse address is registry.cn-qingdao.aliyuncs.com.
@@ -79,5 +79,5 @@ The image warehouse address is registry.cn-qingdao.aliyuncs.com.
 If you do not log in to the mirror warehouse, you need to use -u and -p to specify the username and password
 
 ```shell
-auto-build --k8s-version=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8 --push --username=specifyUser --password=specifyPasswd
+auto-build --k8s-version=v1.22.8 --buildName=docker.io/sealerio/kubernetes:v1.22.8 --push --username=specifyUser --password=specifyPasswd
 ```

@@ -109,8 +109,8 @@ wget -q "${seautil_tarball_amd64_url}" && tar zxvf "${seautil_tarball_amd64}" -C
 wget -q "${seautil_tarball_arm64_url}" && tar zxvf "${seautil_tarball_arm64}" -C "arm64/bin"
 
 echo "download cri with ${cri}"
-wget -q "${cri_tarball_amd64_url}" && mv "${cri_tarball_amd64}" "amd64/cri"
-wget -q "${cri_tarball_arm64_url}" && mv "${cri_tarball_arm64}" "arm64/cri"
+wget -q "${cri_tarball_amd64_url}" && mv "${cri_tarball_amd64}" "amd64/cri/docker.tar.gz"
+wget -q "${cri_tarball_arm64_url}" && mv "${cri_tarball_arm64}" "arm64/cri/docker.tar.gz"
 
 echo "download distribution image ${registry_tarball_amd64}"
 wget -q "${registry_tarball_amd64_url}" && mv "${registry_tarball_amd64}" "amd64/images"
