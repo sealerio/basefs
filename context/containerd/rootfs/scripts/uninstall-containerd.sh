@@ -27,10 +27,6 @@ rm -f /usr/bin/containerd-shim-runc-v2
 rm -f /usr/bin/crictl
 rm -f /usr/bin/ctr
 
-systemctl disable kubelet
-rm -f /usr/bin/kubeadm
-rm -f /usr/bin/kubectl
-rm -f /usr/bin/kubelet
 rm -f /usr/bin/rootlesskit
 rm -f /usr/bin/rootlesskit-docker-proxy
 rm -f /usr/bin/runc
@@ -40,14 +36,8 @@ rm -f /usr/bin/containerd-rootless.sh
 rm -f /usr/bin/nerdctl
 rm -f /usr/bin/seautil
 
-rm -f /etc/sysctl.d/k8s.conf
 rm -f /etc/crictl.yaml
-rm -f /etc/systemd/system/kubelet.service
-rm -rf /etc/systemd/system/kubelet.service.d
 rm -rf /etc/ld.so.conf.d/containerd.conf
-rm -rf /var/lib/kubelet/
 rm -rf /var/lib/containerd
 rm -rf /var/lib/nerdctl
-rm -f /var/lib/kubelet/config.yaml
 rm -rf /opt/containerd
-systemctl daemon-reload
