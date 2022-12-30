@@ -137,7 +137,7 @@ regArgs="-d --restart=always \
 -v $VOLUME:/var/lib/registry \
 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$REGISTRY_DOMAIN.crt \
 -e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key \
--e REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:5001 \
+-e REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:5002 \
 -e REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED=true"
 
 if [ -f "$config" ]; then
