@@ -59,7 +59,7 @@ if [[ $(ls ../cri/docker*.tar.gz) ]]; then
     ubuntu | deepin | debian | raspbian)
       cp ../etc/docker.service /lib/systemd/system/docker.service
       ;;
-    centos | rhel | ol | sles | kylin | neokylin)
+    centos | rhel | ol | sles | kylin | neokylin | uos)
       cp ../etc/docker.service /usr/lib/systemd/system/docker.service
       ;;
     alios)
