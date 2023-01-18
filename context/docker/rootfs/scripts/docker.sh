@@ -16,10 +16,13 @@
 set -x
 set -e
 
-scripts_path=$(cd `dirname $0`; pwd)
+# shellcheck disable=SC2046
+# shellcheck disable=SC2006
+scripts_path=$(cd `dirname "$0"`; pwd)
 image_dir="$scripts_path/../images"
 DOCKER_VERSION="19.03.14-sealer"
 
+# shellcheck disable=SC1091
 get_distribution() {
   lsb_dist=""
   # Every system that we officially support has /etc/os-release
@@ -29,6 +32,10 @@ get_distribution() {
   # Returning an empty string here should be alright since the
   # case statements don't act unless you provide an actual value
   echo "$lsb_dist"
+}
+
+utils_command_exists() {
+    command -v "$@" > /dev/null 2>&1
 }
 
 disable_selinux() {
@@ -46,6 +53,13 @@ load_images() {
   done
 }
 
+# shellcheck disable=SC2145
+utils_info()
+{
+    echo -e "\033[1;32m$@\033[0m"
+}
+
+# shellcheck disable=SC2006
 check_docker_valid() {
   if ! docker info 2>&1; then
     panic "docker is not healthy: $(docker info 2>&1), please check"
@@ -58,7 +72,7 @@ check_docker_valid() {
 }
 
 storage=${1:-/var/lib/docker}
-mkdir -p $storage
+mkdir -p "$storage"
 if ! utils_command_exists docker; then
   lsb_dist=$(get_distribution)
   lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
@@ -101,8 +115,8 @@ if ! utils_command_exists docker; then
   systemctl enable docker.service
   systemctl restart docker.service
   cp "${scripts_path}"/../etc/daemon.json /etc/docker
-  mkdir -p /root/.docker/
-  cp "${scripts_path}"/../etc/docker-cli-config.json /root/.docker/config.json
+  #mkdir -p /root/.docker/
+  #cp "${scripts_path}"/../etc/docker-cli-config.json /root/.docker/config.json
   if [[ -n $1 && -n $2 ]]; then
     sed -i "s/sea.hub:5000/$2:$3/g" /etc/docker/daemon.json
   fi
@@ -114,3 +128,4 @@ systemctl restart docker.service
 check_docker_valid
 
 load_images
+bash "${scripts_path}"/init-kube.sh

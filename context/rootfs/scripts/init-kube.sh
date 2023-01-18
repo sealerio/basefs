@@ -1,7 +1,11 @@
 #!/bin/bash
 
-scripts_path=$(cd `dirname $0`; pwd)
-source "${scripts_path}"/utils.sh
+# shellcheck disable=SC2046
+# shellcheck disable=SC2164
+# shellcheck disable=SC2006
+# shellcheck disable=SC1091
+scripts_path=$(cd `dirname "$0"`; pwd)
+#source "${scripts_path}"/utils.sh
 
 set -x
 
@@ -34,18 +38,18 @@ disable_firewalld() {
 }
 
 copy_bins() {
-  chmod -R 755 ../bin/*
-  chmod 644 ../bin
-  cp ../bin/* /usr/bin
-  cp ../scripts/kubelet-pre-start.sh /usr/bin
+  chmod -R 755 "${scripts_path}"/../bin/*
+  chmod 644 "${scripts_path}"/../bin
+  cp "${scripts_path}"/../bin/* /usr/bin
+  cp "${scripts_path}"/../scripts/kubelet-pre-start.sh /usr/bin
   chmod +x /usr/bin/kubelet-pre-start.sh
 }
 
 copy_kubelet_service(){
   mkdir -p /etc/systemd/system
-  cp ../etc/kubelet.service /etc/systemd/system/
+  cp "${scripts_path}"/../etc/kubelet.service /etc/systemd/system/
   [ -d /etc/systemd/system/kubelet.service.d ] || mkdir /etc/systemd/system/kubelet.service.d
-  cp ../etc/10-kubeadm.conf /etc/systemd/system/kubelet.service.d/
+  cp "${scripts_path}"/../etc/10-kubeadm.conf /etc/systemd/system/kubelet.service.d/
 }
 
 disable_firewalld
@@ -56,4 +60,4 @@ copy_kubelet_service
 systemctl enable kubelet
 
 # nvidia-docker.sh need set kubelet labels, it should be run after kubelet
-bash ${scripts_path}/nvidia-docker.sh || exit 1
+#bash "${scripts_path}"/nvidia-docker.sh || exit 1
