@@ -1,4 +1,10 @@
 FROM scratch
-COPY rootfs/* .
-COPY ${ARCH}/* . 
-COPY imageList manifests/
+COPY rootfs .
+COPY amd64 .
+COPY imageList manifests
+LABEL "cluster.alpha.sealer.io/cluster-runtime-version"="v1.22.15"
+LABEL "cluster.alpha.sealer.io/cluster-runtime-type"="kubernetes"
+LABEL "cluster.alpha.sealer.io/container-runtime-type"="docker"
+LABEL "cluster.alpha.sealer.io/container-runtime-version"="19.03.14"
+CNI calico local://tigera-operator.yaml local://custom-resources.yaml
+LAUNCH ["calico"]
