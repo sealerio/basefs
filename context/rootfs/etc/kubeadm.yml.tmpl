@@ -1,0 +1,194 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: 172.16.0.181
+  bindPort: 6443
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  taints: null
+
+---
+apiServer:
+  certSANs:
+  extraArgs:
+    audit-log-format: json
+    audit-log-maxage: "7"
+    audit-log-maxbackup: "10"
+    audit-log-maxsize: "100"
+    audit-log-path: /var/log/kubernetes/audit.log
+    audit-policy-file: /etc/kubernetes/audit-policy.yml
+    enable-aggregator-routing: "true"
+    etcd-servers: https://172.16.0.181:2379
+    feature-gates: TTLAfterFinished=true,EphemeralContainers=true
+  extraVolumes:
+  - hostPath: /etc/kubernetes
+    mountPath: /etc/kubernetes
+    name: audit
+    pathType: DirectoryOrCreate
+  - hostPath: /var/log/kubernetes
+    mountPath: /var/log/kubernetes
+    name: audit-log
+    pathType: DirectoryOrCreate
+  - hostPath: /etc/localtime
+    mountPath: /etc/localtime
+    name: localtime
+    pathType: File
+    readOnly: true
+apiVersion: kubeadm.k8s.io/v1beta2
+controlPlaneEndpoint: apiserver.cluster.local:6443
+controllerManager:
+  extraArgs:
+    experimental-cluster-signing-duration: 876000h
+    feature-gates: TTLAfterFinished=true,EphemeralContainers=true
+  extraVolumes:
+  - hostPath: /etc/localtime
+    mountPath: /etc/localtime
+    name: localtime
+    pathType: File
+    readOnly: true
+dns:
+  type: ""
+  #imageRepository: {{or .RegistryURL "sea.hub:5000"}}/coredns
+etcd:
+  local:
+    dataDir: ""
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+imageRepository: {{or .RegistryURL "sea.hub:5000"}}
+kind: ClusterConfiguration
+kubernetesVersion: v1.19.8
+networking:
+  podSubnet: 192.168.0.0/16
+  serviceSubnet: 10.96.0.0/22
+scheduler:
+  extraArgs:
+    feature-gates: TTLAfterFinished=true,EphemeralContainers=true
+  extraVolumes:
+  - hostPath: /etc/localtime
+    mountPath: /etc/localtime
+    name: localtime
+    pathType: File
+    readOnly: true
+
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 2m0s
+    enabled: true
+  x509:
+    clientCAFile: /etc/kubernetes/pki/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 5m0s
+    cacheUnauthorizedTTL: 30s
+cgroupDriver: cgroupfs
+cgroupsPerQOS: true
+clusterDomain: cluster.local
+configMapAndSecretChangeDetectionStrategy: Watch
+containerLogMaxFiles: 5
+containerLogMaxSize: 10Mi
+contentType: application/vnd.kubernetes.protobuf
+cpuCFSQuota: true
+cpuCFSQuotaPeriod: 100ms
+cpuManagerPolicy: none
+cpuManagerReconcilePeriod: 10s
+enableControllerAttachDetach: true
+enableDebuggingHandlers: true
+enforceNodeAllocatable:
+- pods
+eventBurst: 10
+eventRecordQPS: 5
+evictionHard:
+  imagefs.available: 15%
+  memory.available: 100Mi
+  nodefs.available: 10%
+  nodefs.inodesFree: 5%
+evictionPressureTransitionPeriod: 5m0s
+failSwapOn: true
+fileCheckFrequency: 20s
+hairpinMode: promiscuous-bridge
+healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 20s
+imageGCHighThresholdPercent: 85
+imageGCLowThresholdPercent: 80
+imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+kind: KubeletConfiguration
+kubeAPIBurst: 10
+kubeAPIQPS: 5
+logging: {}
+makeIPTablesUtilChains: true
+maxOpenFiles: 1000000
+maxPods: 110
+nodeLeaseDurationSeconds: 40
+nodeStatusReportFrequency: 10s
+nodeStatusUpdateFrequency: 10s
+oomScoreAdj: -999
+podPidsLimit: -1
+port: 10250
+registryBurst: 10
+registryPullQPS: 5
+rotateCertificates: true
+runtimeRequestTimeout: 2m0s
+serializeImagePulls: true
+shutdownGracePeriod: 0s
+shutdownGracePeriodCriticalPods: 0s
+staticPodPath: /etc/kubernetes/manifests
+streamingConnectionIdleTimeout: 4h0m0s
+syncFrequency: 1m0s
+volumeStatsAggPeriod: 1m0s
+
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+bindAddress: ""
+bindAddressHardFail: false
+clientConnection:
+  acceptContentTypes: ""
+  burst: 0
+  contentType: ""
+  kubeconfig: ""
+  qps: 0
+clusterCIDR: ""
+configSyncPeriod: 0s
+conntrack:
+  maxPerCore: null
+  min: null
+  tcpCloseWaitTimeout: null
+  tcpEstablishedTimeout: null
+detectLocalMode: ""
+enableProfiling: false
+healthzBindAddress: ""
+hostnameOverride: ""
+iptables:
+  masqueradeAll: false
+  masqueradeBit: null
+  minSyncPeriod: 0s
+  syncPeriod: 0s
+ipvs:
+  excludeCIDRs:
+  - 10.103.97.2/32
+  minSyncPeriod: 0s
+  scheduler: ""
+  strictARP: false
+  syncPeriod: 0s
+  tcpFinTimeout: 0s
+  tcpTimeout: 0s
+  udpTimeout: 0s
+kind: KubeProxyConfiguration
+metricsBindAddress: ""
+mode: ipvs
+nodePortAddresses: null
+oomScoreAdj: null
+portRange: ""
+showHiddenMetricsForVersion: ""
+udpIdleTimeout: 0s
+winkernel:
+  enableDSR: false
+  networkName: ""
+  sourceVip: ""

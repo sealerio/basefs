@@ -16,6 +16,6 @@ export crictl_version=${crictl_version:-"1.24.1"}
 
 export containerd_version=${containerd_version:-"1.6.12"}
 
-export seautil_version=${seautil_version:-"0.8.5"}
+export seautil_version=${seautil_version:-"0.9.0"}
 
 ##export docker_version="19.03.14"

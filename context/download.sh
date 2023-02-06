@@ -59,8 +59,9 @@ install_url="https://sealer.oss-cn-beijing.aliyuncs.com/auto-build"
 ##https://github.com/osemp/moby/releases/download/v19.03.14/docker-amd64.tar.gz
 ##registry ${ARCH} image: ghcr.io/osemp/distribution-amd64/distribution:latest
 if [ "${cri}" = "docker" ]; then
-  docker_version="19.03.14"
-  docker_url="https://github.com/osemp/moby"
+  docker_version="19.03.15"
+  #docker_url="https://github.com/osemp/moby"
+  docker_url="https://github.com/moby/moby"
   cri_tarball_amd64="docker-amd64.tar.gz"
   cri_tarball_arm64="docker-arm64.tar.gz"
   cri_tarball_amd64_url="${docker_url}/releases/download/v${docker_version}/${cri_tarball_amd64}"

@@ -42,7 +42,6 @@ completely rootfs dendrogram
 ├── images
 │   └── registry.tar  # registry docker image, will load this image and run a local registry in cluster
 ├── Kubefile
-├── Metadata
 ├── README.md
 ├── registry # will mount this dir to local registry
 │   └── docker
@@ -124,7 +123,6 @@ oss rootfs context dendrogram:
 │   │   ├── crictl
 │   │   ├── nerdctl
 │   │   └── seautil
-│   └── Metadata
 ├── arm64
 │   ├── bin
 │   │   ├── conntrack
@@ -133,7 +131,6 @@ oss rootfs context dendrogram:
 │   │   ├── crictl
 │   │   ├── nerdctl
 │   │   └── seautil
-│   └── Metadata
 ```
 
 #### ${cri}Context
@@ -194,7 +191,6 @@ completely build context dendrogram at build stage which merged base rootfs, oss
 │   │   └── docker.tar.gz
 │   ├── images
 │   │   └── registry.tar
-│   └── Metadata
 ├── arm64
 │   ├── bin
 │   │   ├── conntrack
@@ -210,7 +206,6 @@ completely build context dendrogram at build stage which merged base rootfs, oss
 │   │   └── docker.tar.gz
 │   ├── images
 │   │   └── registry.tar
-│   └── Metadata
 └── rootfs
     ├── etc
     │   ├── 10-kubeadm.conf

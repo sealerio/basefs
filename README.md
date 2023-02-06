@@ -15,7 +15,6 @@ images, so make sure it is a valid value.
 ```shell
 ## auto-build options:
   --k8s-version         set the kubernetes k8s_version of the Clusterimage, k8s_version must be greater than 1.13
-  -c, --cri             cri can be set to docker or containerd between kubernetes 1.20-1.24 versions
   -n, --buildName       set build image name, default is 'registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:${k8s_version}'
   --platform            set the build mirror platform, the default is linux/amd64,linux/arm64
   --push                push clusterimage after building the clusterimage. The image name must contain the full name of the repository, and use -u and -p to specify the username and password.
@@ -50,13 +49,6 @@ this will build a Clusterimage with amd64 platform.
 auto-build --k8s-version=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8
 ```
 
-### build with specify CRI
-
-this will build a Clusterimage with containerd. if user not specify the CRI ,we use containerd as Clusterimage default cri.
-
-```shell
-auto-build --k8s-version=v1.22.8 --cri=docker
-```
 
 ### build with customized Clusterimage name
 
