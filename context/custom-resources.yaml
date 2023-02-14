@@ -12,7 +12,7 @@ spec:
     ipPools:
     - blockSize: 26
       cidr: 100.64.0.0/10
-      encapsulation: VXLANCrossSubnet
+      encapsulation: IPIP
       natOutgoing: Enabled
       nodeSelector: all()
 
