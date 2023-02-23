@@ -50,14 +50,6 @@ this will build a Clusterimage with amd64 platform.
 auto-build --k8s-version=v1.22.8 --buildName=registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:v1.22.8
 ```
 
-### build with specify CRI
-
-this will build a Clusterimage with containerd. if user not specify the CRI ,we use containerd as Clusterimage default cri.
-
-```shell
-auto-build --k8s-version=v1.22.8 --cri=docker
-```
-
 ### build with customized Clusterimage name
 
 this will build a Clusterimage named `registry.cn-qingdao.aliyuncs.com/sealer-io/myk8s:v1.22.8`
