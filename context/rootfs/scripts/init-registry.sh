@@ -23,10 +23,12 @@ cd $(dirname "$0")
 REGISTRY_PORT=${1-5000}
 VOLUME=${2-/var/lib/registry}
 REGISTRY_DOMAIN=${3-sea.hub}
+REGISTRY_TYPE=${4-docker}
 
 container=sealer-registry
 rootfs=$(dirname "$(pwd)")
 config="$rootfs/etc/registry_config.yml"
+oci_config="$rootfs/etc/oci_registry_config.json"
 htpasswd="$rootfs/etc/registry_htpasswd"
 certs_dir="$rootfs/certs"
 image_dir="$rootfs/images"
@@ -79,31 +81,93 @@ if [ "$(docker ps -aq -f name=$container)" ]; then
     docker rm -f $container
 fi
 
+# shellcheck disable=SC2034
+# shellcheck disable=SC2089
+ociConfig="{ \
+  \"distspecversion\": \"1.0.1-dev\", \
+  \"storage\": { \
+    \"rootdirectory\": \"/var/lib/registry\" \
+  }, \
+  \"http\": { \
+    \"address\": \"0.0.0.0\", \
+    \"port\": $1, \
+    \"realm\": \"zot\", \
+    \"tls\": {
+      \"cert\": \"/certs/$REGISTRY_DOMAIN.cert\", \
+      \"key\": \"/certs/$REGISTRY_DOMAIN.key\" \
+    } \
+  } \
+}"
+
+# shellcheck disable=SC2034
+# shellcheck disable=SC2089
+ociConfigAuth="{ \
+  \"distspecversion\": \"1.0.1-dev\", \
+  \"storage\": { \
+    \"rootdirectory\": \"/var/lib/registry\" \
+  }, \
+  \"http\": { \
+    \"address\": \"0.0.0.0\", \
+    \"port\": $1, \
+    \"realm\": \"zot\", \
+    \"tls\": {
+      \"cert\": \"/certs/$REGISTRY_DOMAIN.cert\", \
+      \"key\": \"/certs/$REGISTRY_DOMAIN.key\" \
+    }, \
+    \"auth\": { \
+      \"htpasswd\": { \
+        \"path\": \"/etc/zot/htpasswd\" \
+      } \
+    } \
+  } \
+}"
+
 regArgs="-d --restart=always \
 --net=host \
 --name $container \
--v $certs_dir:/certs \
--v $VOLUME:/var/lib/registry \
--e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$REGISTRY_DOMAIN.crt \
--e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key \
--e REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:5002 \
--e REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED=true"
+-v $VOLUME:/var/lib/registry"
 
 # shellcheck disable=SC2086
-if [ -f $config ]; then
-    sed -i "s/5000/$1/g" $config
-    regArgs="$regArgs \
-    -v $config:/etc/docker/registry/config.yml"
-fi
-# shellcheck disable=SC2086
-if [ -f $htpasswd ]; then
-    docker run $regArgs \
-            -v $htpasswd:/htpasswd \
-            -e REGISTRY_AUTH=htpasswd \
-            -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
-            -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || startRegistry
-else
-    docker run $regArgs registry:2.7.1 || startRegistry
+if [ "$REGISTRY_TYPE" == "docker" ]; then
+  regArgs="$regArgs \
+  -v $certs_dir:/certs \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/$REGISTRY_DOMAIN.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/$REGISTRY_DOMAIN.key \
+  -e REGISTRY_HTTP_DEBUG_ADDR=0.0.0.0:5002 \
+  -e REGISTRY_HTTP_DEBUG_PROMETHEUS_ENABLED=true"
+  # shellcheck disable=SC2086
+  if [ -f $config ]; then
+      sed -i "s/5000/$1/g" $config
+      regArgs="$regArgs \
+      -v $config:/etc/docker/registry/config.yml"
+  fi
+  # shellcheck disable=SC2086
+  if [ -f $htpasswd ]; then
+      docker run $regArgs \
+              -v $htpasswd:/htpasswd \
+              -e REGISTRY_AUTH=htpasswd \
+              -e REGISTRY_AUTH_HTPASSWD_PATH=/htpasswd \
+              -e REGISTRY_AUTH_HTPASSWD_REALM="Registry Realm" registry:2.7.1 || startRegistry
+  else
+      docker run $regArgs registry:2.7.1 || startRegistry
+  fi
+else # oci registry
+  regArgs="$regArgs \
+  -v $oci_config:/etc/zot/config.json
+  -v $certs_dir/$REGISTRY_DOMAIN.crt:/certs/$REGISTRY_DOMAIN.cert \
+  -v $certs_dir/$REGISTRY_DOMAIN.key:/certs/$REGISTRY_DOMAIN.key"
+   # shellcheck disable=SC2086
+   if [ -f $htpasswd ]; then
+       # shellcheck disable=SC2090
+       echo $ociConfigAuth > $oci_config
+       docker run $regArgs \
+               -v $htpasswd:/etc/zot/htpasswd \
+               ghcr.io/project-zot/zot-linux-amd64:v1.4.3 || startRegistry
+   else
+       # shellcheck disable=SC2090
+       echo $ociConfig > $oci_config
+       docker run $regArgs ghcr.io/project-zot/zot-linux-amd64:v1.4.3 || startRegistry
+   fi
 fi
 
 check_registry
