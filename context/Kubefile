@@ -5,6 +5,8 @@ COPY imageList manifests
 LABEL "cluster.alpha.sealer.io/cluster-runtime-version"="v1.22.15"
 LABEL "cluster.alpha.sealer.io/cluster-runtime-type"="kubernetes"
 LABEL "cluster.alpha.sealer.io/container-runtime-type"="docker"
-LABEL "cluster.alpha.sealer.io/container-runtime-version"="19.03.14"
-CNI calico local://tigera-operator.yaml local://custom-resources.yaml
+LABEL "cluster.alpha.sealer.io/container-runtime-version"="19.03.15"
+COPY tigera-operator.yaml applications/tigera-operator.yaml
+COPY custom-resources.yaml applications/custom-resources.yaml
+APP calico local://calico.sh
 LAUNCH ["calico"]
