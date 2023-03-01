@@ -250,13 +250,13 @@ containerd default sock addr : "/run/containerd/containerd.sock"
 
 3, imageRepository for kubeadm.yml
 
-imageList use native repo `k8s.gcr.io` which generated from imageRepository of kubeadm.yml ,
+imageList use native repo `registry.k8s.io` which generated from imageRepository of kubeadm.yml ,
 
 we modify the imageRepository to `sea.hub:5000` for pulling from our private registry.
 
 4, dns imageRepository for kubeadm.yml
 
-if output of `kubeadm config images list` looks like `k8s.gcr.io/coredns/coredns:1.8.6`,
+if output of `kubeadm config images list` looks like `registry.k8s.io/coredns/coredns:1.8.6`,
 
 then we need set dns section of ClusterConfiguration:
 
