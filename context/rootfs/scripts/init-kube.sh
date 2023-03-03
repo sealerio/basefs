@@ -57,7 +57,7 @@ copy_bins
 copy_kubelet_service
 [ -d /var/lib/kubelet ] || mkdir -p /var/lib/kubelet/
 /usr/bin/kubelet-pre-start.sh
-systemctl enable kubelet
+systemctl daemon-reload && systemctl enable kubelet
 
 # nvidia-docker.sh need set kubelet labels, it should be run after kubelet
 #bash "${scripts_path}"/nvidia-docker.sh || exit 1
