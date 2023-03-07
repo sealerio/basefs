@@ -27,7 +27,7 @@ disable_firewalld() {
   ubuntu | deepin | debian | raspbian)
     command -v ufw &>/dev/null && ufw disable
     ;;
-  centos | rhel | ol | sles | kylin | neokylin)
+  centos | rhel | ol | sles | kylin | neokylin | rocky)
     systemctl stop firewalld && systemctl disable firewalld
     ;;
   *)

@@ -88,7 +88,7 @@ if ! utils_command_exists docker; then
       fi
     fi
     ;;
-  centos | rhel | anolis | ol | sles | kylin | neokylin)
+  centos | rhel | anolis | ol | sles | kylin | neokylin | rocky)
     cp "${scripts_path}"/../etc/docker.service /usr/lib/systemd/system/docker.service
     ;;
   alios)
