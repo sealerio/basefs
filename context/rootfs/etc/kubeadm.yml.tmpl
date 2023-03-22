@@ -1,4 +1,4 @@
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: 172.16.0.181
@@ -34,7 +34,7 @@ apiServer:
     name: localtime
     pathType: File
     readOnly: true
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 controlPlaneEndpoint: apiserver.cluster.local:6443
 controllerManager:
   extraArgs:
@@ -48,7 +48,7 @@ controllerManager:
     readOnly: true
 dns:
   type: ""
-  #imageRepository: {{or .RegistryURL "sea.hub:5000"}}/coredns
+  imageRepository: {{or .RegistryURL "sea.hub:5000"}}/coredns
 etcd:
   local:
     dataDir: ""
@@ -71,6 +71,18 @@ scheduler:
     readOnly: true
 
 ---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+caCertPath: /etc/kubernetes/pki/ca.crt
+discovery:
+  timeout: 5m0s
+nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+controlPlane:
+  localAPIEndpoint:
+    bindPort: 6443
+
+---
 apiVersion: kubelet.config.k8s.io/v1beta1
 authentication:
   anonymous:
@@ -85,7 +97,7 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: cgroupfs
+cgroupDriver: systemd
 cgroupsPerQOS: true
 clusterDomain: cluster.local
 configMapAndSecretChangeDetectionStrategy: Watch
@@ -99,7 +111,7 @@ cpuManagerReconcilePeriod: 10s
 enableControllerAttachDetach: true
 enableDebuggingHandlers: true
 enforceNodeAllocatable:
-- pods
+  - pods
 eventBurst: 10
 eventRecordQPS: 5
 evictionHard:
@@ -172,7 +184,7 @@ iptables:
   syncPeriod: 0s
 ipvs:
   excludeCIDRs:
-  - 10.103.97.2/32
+    - 10.103.97.2/32
   minSyncPeriod: 0s
   scheduler: ""
   strictARP: false
