@@ -50,7 +50,7 @@ etcd:
     dataDir: ""
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
-imageRepository: k8s.gcr.io
+#imageRepository: k8s.gcr.io
 kind: ClusterConfiguration
 kubernetesVersion: v1.19.8
 networking:
