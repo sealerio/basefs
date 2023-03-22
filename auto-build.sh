@@ -87,19 +87,20 @@ sudo chmod +x version.sh download.sh && export kube_install_version="$k8s_versio
 ./download.sh "${cri}"
 
 sudo chmod +x amd64/bin/kube* && sudo chmod +x arm64/bin/kube*
-#download v0.9.1 sealer
-sudo wget https://github.com/sealerio/sealer/releases/download/v0.9.1/sealer-v0.9.1-linux-amd64.tar.gz && tar -xvf sealer-v0.9.1-linux-amd64.tar.gz -C /usr/bin
+#download v0.9.2 sealer
+sudo wget https://github.com/sealerio/sealer/releases/download/v0.9.2/sealer-v0.9.2-linux-amd64.tar.gz && tar -xvf sealer-v0.9.2-linux-amd64.tar.gz -C /usr/bin
 sudo sed -i "s/v1.19.8/$k8s_version/g" rootfs/etc/kubeadm.yml ##change k8s_version
 sudo sed -i "s/v1.19.8/$k8s_version/g" rootfs/etc/kubeadm.yml.tmpl ##change k8s_version
 if [[ "$cri" == "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml; fi
 if [[ "$cri" == "containerd" ]]; then sudo sed -i "s/\/var\/run\/dockershim.sock/\/run\/containerd\/containerd.sock/g" rootfs/etc/kubeadm.yml.tmpl; fi
-sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml
-sudo sed -i "s/kubeadm.k8s.io\/v1beta2/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml.tmpl
+sudo sed -i "s/kubeadm.k8s.io\/v1beta3/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml
+sudo sed -i "s/kubeadm.k8s.io\/v1beta3/$kubeadmApiVersion/g" rootfs/etc/kubeadm.yml.tmpl
 sudo ./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml"
 sudo mkdir -p rootfs/manifests
 sudo ./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null | sed "/WARNING/d" >>imageList
 if [ "$(sudo ./"${ARCH}"/bin/kubeadm config images list --config rootfs/etc/kubeadm.yml 2>/dev/null | grep -c "coredns/coredns")" -gt 0 ]; then sudo sed -i "s/#imageRepository/imageRepository/g" rootfs/etc/kubeadm.yml.tmpl; fi
-sudo sed -i "s/k8s.gcr.io/sea.hub:5000/g" rootfs/etc/kubeadm.yml.tmpl
+#if [ "$(sudo ./"${ARCH}"/bin/kubeadm config images list --config rootfs/etc/kubeadm.yml 2>/dev/null | grep -c "coredns/coredns")" -gt 0 ]; then sudo sed -i "s/#imageRepository/imageRepository/g" rootfs/etc/kubeadm.yml; fi
+sudo sed -i "s/registry.k8s.io/sea.hub:5000/g" rootfs/etc/kubeadm.yml.tmpl
 pauseImage=$(./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null | sed "/WARNING/d" | grep pause)
 if [ -f "rootfs/etc/dump-config.toml" ]; then sudo sed -i "s/sea.hub:5000\/pause:3.6/$(echo "$pauseImage" | sed 's/\//\\\//g')/g" rootfs/etc/dump-config.toml; fi
 sudo sealer build -t "docker.io/sealerio/kubernetes:${k8s_version}" -f Kubefile
