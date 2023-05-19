@@ -73,7 +73,7 @@ check_docker_valid() {
 
 storage=${1:-/var/lib/docker}
 mkdir -p "$storage"
-if ! utils_command_exists docker; then
+if ! utils_command_exists docker || ! utils_command_exists systemctl status docker; then
   lsb_dist=$(get_distribution)
   lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
   echo "current system is $lsb_dist"
