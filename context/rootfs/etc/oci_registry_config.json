@@ -1,0 +1,20 @@
+{
+  "distspecversion": "1.0.1-dev",
+  "storage": {
+    "rootdirectory": "/var/lib/registry"
+  },
+  "http": {
+    "address": "0.0.0.0",
+    "port": 5000,
+    "realm": "zot",
+    "tls": {
+      "cert": "/certs/REGISTRY_DOMAIN.cert",
+      "key": "/certs/REGISTRY_DOMAIN.key"
+    },
+    "auth": {
+      "htpasswd": {
+        "path": "/etc/zot/htpasswd"
+      }
+    }
+  }
+}

@@ -12,6 +12,18 @@ for i in "$@"; do
     fi
     shift # past argument=value
     ;;
+  --registry=*)
+    registry="${i#*=}"
+    if [ "$registry" != "docker" ] && [ "$registry" != "oci" ]; then
+      if [ "$registry" != "" ]; then
+        echo "Unsupported registry type: ${registry}"
+        exit 1
+      else
+        registry="docker";
+      fi
+    fi
+    shift # past argument=value
+    ;;
   -n=* | --buildName=*)
     buildName="${i#*=}"
     shift # past argument=value
@@ -42,6 +54,7 @@ for i in "$@"; do
   --k8s-version         set the kubernetes k8s_version of the Clusterimage, k8s_version must be greater than 1.13
   -c, --cri             cri can be set to docker or containerd between kubernetes 1.20-1.24 versions
   -n, --buildName       set build image name, default is 'registry.cn-qingdao.aliyuncs.com/sealer-io/kubernetes:${k8s_version}'
+  --registry            set sealer internal registry type, can be set to docker or oci, default is docker
   --platform            set the build mirror platform, the default is linux/amd64,linux/arm64
   --push                push clusterimage after building the clusterimage. The image name must contain the full name of the repository, and use -u and -p to specify the username and password.
   -u, --username        specify the user's username for pushing the Clusterimage
@@ -102,7 +115,7 @@ if [ "$(sudo ./"${ARCH}"/bin/kubeadm config images list --config rootfs/etc/kube
 sudo sed -i "s/registry.k8s.io/sea.hub:5000/g" rootfs/etc/kubeadm.yml.tmpl
 pauseImage=$(./"${ARCH}"/bin/kubeadm config images list --config "rootfs/etc/kubeadm.yml" 2>/dev/null | sed "/WARNING/d" | grep pause)
 if [ -f "rootfs/etc/dump-config.toml" ]; then sudo sed -i "s/sea.hub:5000\/pause:3.6/$(echo "$pauseImage" | sed 's/\//\\\//g')/g" rootfs/etc/dump-config.toml; fi
-sudo sealer build -t "docker.io/sealerio/kubernetes:${k8s_version}" -f Kubefile
+sudo sealer build -t "docker.io/sealerio/kubernetes:${k8s_version}" -f Kubefile --registry-type="${registry}"
 if [[ "$push" == "true" ]]; then
   if [[ -n "$username" ]] && [[ -n "$password" ]]; then
     sudo sealer login "$(echo "docker.io" | cut -d "/" -f1)" -u "${username}" -p "${password}"
