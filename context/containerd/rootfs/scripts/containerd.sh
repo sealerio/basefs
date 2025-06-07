@@ -45,7 +45,7 @@ if ! containerd --version; then
       fi
     fi
     ;;
-  centos | rhel | anolis | ol | sles | kylin | neokylin)
+  centos | rhel | anolis | ol | sles | kylin | neokylin | rocky)
     RPM_DIR=${scripts_path}/../rpm/
     rpm=libseccomp
     if ! rpm -qa | grep ${rpm};then
